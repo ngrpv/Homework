@@ -1,0 +1,26 @@
+let fs = require('fs');
+let arg = process.argv;
+let count = [];
+fs.readFile(arg[2], (err, data) => {
+	if (err){
+		console.error(err);
+		return;
+	}
+	input_str = data.toString();
+	for(i in input_str){
+		count[input_str[i]] = 0;
+	}
+
+	for(i in input_str){
+		count[input_str[i]] += 1;
+	}
+let len = input_str.length;
+let H = 0;
+for(i in count){
+	console.log(Math.log(count[i]/len));
+H = H - (count[i]/len)*(Math.log(count[i]/len)/Math.log(2));
+}
+
+	console.log(count);
+	console.log(H);
+} );
