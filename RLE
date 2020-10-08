@@ -1,0 +1,68 @@
+let fs = require('fs');
+let arg = process.argv;
+let k = 0, i = 0, n = 1;
+let testString = '';
+let resStr = '';
+let resStr1 = '';
+let str = "" ;
+let coded = "";
+let decoded = "";
+function code(inText){
+	while (i < inText.length){
+	while(inText.charAt(i) == inText.charAt(i+n))
+		n++;
+	console.log(inText.charAt(i)," - ", n);
+	nJump = n;
+	while( n >= 255){
+		resStr += '#' + String.fromCharCode(255) + inText.charAt(i);
+		n -= 255;
+	}
+	if ((n > 3) || (inText.charAt(i) == '#'))
+		resStr += '#' + String.fromCharCode(n) + inText.charAt(i)
+	else
+		for(l = 0; l < n; l++)
+	resStr += inText.charAt(i);
+	i += nJump;
+	n = 1;
+	}
+	return resStr;
+}	
+function decode(str){	
+	while (k < str.length){		
+		if (str[k] == '#'){
+			for(let j = 0; j < str.charCodeAt(k+1);j++){
+				resStr1 += str[k+2];
+			}
+			
+			k+=3;
+		}
+		else{
+			//if (i < str.length)
+			resStr1 += str[k];
+			k++;			
+		}
+		
+	}
+	return resStr1;
+}
+
+fs.readFile(arg[2], (err,data) => {
+	
+	if (err){
+		console.error(err);
+		return;
+	}
+	str = data.toString();
+	coded = code(str);
+	decoded = decode(coded);
+	console.log(coded);
+	console.log(decoded);
+	
+	fs.writeFileSync('coded_output.txt', coded);
+	fs.writeFileSync('decoded_output.txt', decoded);
+});
+
+
+
+
+
