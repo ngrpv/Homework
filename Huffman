@@ -1,0 +1,88 @@
+//массив для хранения дерева, элементы дерева - объекты
+function Node(letter, freq, used, link, code) {
+    this.letter = letter;
+    this.freq = freq;
+    this.used = used;
+    this.link = link;
+    this.code = code;
+}
+
+let str = 'abrakadabra';
+if (process.argv[2]) {
+    str = process.argv[2];
+}
+let alph = new Array();
+let tree = new Array();//здесь хранятся элементы дерева
+for (let i = 0; i < str.length; i++) {
+    alph[str.charAt(i)] = 0;
+}
+for (let i = 0; i < str.length; i++) {
+    alph[str.charAt(i)]++;
+}
+console.log(alph);
+
+for (i in alph) {
+    let newNode = new Node(i, alph[i], 0, null, '0');
+    tree.push(newNode);
+}
+treeLength = tree.length;
+for (let i = 0; i < treeLength - 1; i++) {
+    minInd = -1;
+    minInd2 = -2;
+    minFreq = str.length;
+    minFreq2 = str.length;
+    for (let j = 0; j < tree.length; j++) {
+//поиск минимального неиспользованного элемента
+        if ((tree[j].used == 0) && (tree[j].freq <= minFreq2)) {
+            minFreq = minFreq2;
+            minInd = minInd2;
+            minInd2 = j;
+            minFreq2 = tree[j].freq;
+        } else if (tree[j].used == 0 && tree[j].freq <= minFreq) {
+            minFreq = tree[j].freq;
+            minInd = j;
+        }
+    }
+    if (minInd2 != -1) {
+        tree[minInd].used = 1;
+        tree[minInd2].used = 1;
+        tree[minInd].link = tree.length;
+        tree[minInd2].link = tree.length;
+        tree[minInd].code = '0';
+        tree[minInd2].code = '1';
+        let newNode = new Node(tree[minInd2].letter + tree[minInd].letter, tree[minInd].freq + tree[minInd2].freq, 0, null, '');
+        tree.push(newNode);
+    }
+}
+for (let i = tree.length - 2; i > -1; i--) {
+    tree[i].code = tree[tree[i].link].code + tree[i].code;
+}
+for (let i = 0; i < treeLength; i++) {
+    console.log(tree[i].letter + " - " + tree[i].code)
+}
+let codedStr = '';
+for (let i = 0; i < str.length; i++) {
+    for (let j = 0; j < tree.length; j++) {
+        if (str[i] == tree[j].letter) {
+            codedStr += tree[j].code;
+        }
+    }
+}
+console.log(codedStr);
+
+//Decoding
+let decodedStr = '';
+let codeOfChar = '';
+
+for (let i = 0; i < codedStr.length; i++) {
+    codeOfChar += codedStr[i];
+    for (let j = 0; j < treeLength; j++) {
+        if (codeOfChar == tree[j].code) {
+            decodedStr += tree[j].letter;
+            codeOfChar = '';
+        }
+    }
+}
+
+console.log(decodedStr);
+console.log(tree);
