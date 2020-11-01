@@ -43,7 +43,6 @@ for (let i = 0; i < treeLength - 1; i++) {
             minInd = j;
         }
     }
-    if (minInd2 != -1) {
         tree[minInd].used = 1;
         tree[minInd2].used = 1;
         tree[minInd].link = tree.length;
@@ -52,7 +51,6 @@ for (let i = 0; i < treeLength - 1; i++) {
         tree[minInd2].code = '1';
         let newNode = new Node(tree[minInd2].letter + tree[minInd].letter, tree[minInd].freq + tree[minInd2].freq, 0, null, '');
         tree.push(newNode);
-    }
 }
 for (let i = tree.length - 2; i > -1; i--) {
     tree[i].code = tree[tree[i].link].code + tree[i].code;
