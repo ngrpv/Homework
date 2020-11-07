@@ -1,0 +1,75 @@
+fs = require('fs');
+const readline = require('readline-sync');
+let arg = process.argv;
+var mem = new Array()
+/*
+   Tested code
+set a 100
+set b 200
+add a b b
+output b
+input 51
+input 50
+add 50 51 51
+output 51
+input x
+input y
+mult x y y
+output y
+ifEqual x y
+output x
+fi
+exit
+*/
+
+let text = fs.readFileSync('1.jss');
+text = text.toString();
+mem = text.split(/[ ,\n]/);
+for (let i =0;i<mem.length;i++){
+    console.log(i,mem[i]);
+}
+var variables = new Array();
+let ip = 0;
+let flag = true;
+let ifFlag = false;
+while (flag){
+    if(ifFlag && mem[ip] != "fi\r"){
+        ip+=1;
+        continue
+    }
+    switch (mem[ip]){
+        case 'input':
+            variables[mem[ip+1].substring(0,mem[ip+1].length-1)] = parseFloat(readline.question("\nPrint input:\n"));
+            ip += 2;
+            break;
+        case 'set':
+            variables[mem[ip+1]] = parseFloat(mem[ip+2]);
+            ip += 3;
+            break;
+        case 'output':
+            //использовал substring, чтобы избавиться от спецсимволов(\r) в переменных
+            console.log("\nResult: ")
+            console.log(variables[mem[ip+1].substring(0,mem[ip+1].length-1)]);
+            ip+=2;
+            break
+        case 'add':
+            variables[mem[ip+3].substring(0,mem[ip+3].length-1)] = variables[mem[ip+1]] + variables[mem[ip+2]];
+            ip+=4;
+            break;
+        case 'mult':
+            variables[mem[ip+3].substring(0,mem[ip+3].length-1)] = variables[mem[ip+1]] * variables[mem[ip+2]];
+            ip+=4
+            break
+        case 'ifEqual':
+            ifFlag = variables[mem[ip+1]] != variables[mem[ip+2].substring(0,mem[ip+2].length-1)];
+            ip+=3;
+            break;
+        case 'fi\r':
+            ifFlag = false;
+            ip+=1;
+            break;
+        case 'exit':
+            flag = false;
+    }
+}
+
